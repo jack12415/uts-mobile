@@ -12,73 +12,144 @@ const DAFTAR_MAHASISWA = [
 
 export default function App() {
   const [detail, setDetail] = useState('');
-
   const [keyword, setKeyword] = useState('');
+
   const hasil = DAFTAR_MAHASISWA.filter((m) =>
     m.nama.toLowerCase().includes(keyword.toLowerCase())
   );
 
+  const bagianAtas = (
+    <View>
+      <View style={styles.header}>
+        <Text style={styles.headerTitle}>Lab. Mobile Computing</Text>
+        <Text style={styles.headerSub}>Jacky Lian - 2431033 - UTS</Text>
+      </View>
+
+      <View style={styles.body}>
+        <View style={styles.sectionRow}>
+          <View style={styles.sectionNo}><Text style={styles.sectionNoText}>1</Text></View>
+          <Text style={styles.sectionTitle}>Custom Reusable Component & Dynamic Props</Text>
+        </View>
+
+        <InfoCard
+          title="Tugas Mobile Game Development"
+          status="selesai"
+          onPress={() => setDetail('Detail dibuka: Tugas Mobile Game Development')}
+        />
+        <InfoCard
+          title="Proyek Pembuatan Aplikasi Mobile"
+          status="proses"
+          onPress={() => setDetail('Detail dibuka: Proyek Pembuatan Aplikasi Mobile')}
+        />
+        {detail !== '' && <Text style={styles.detail}>{detail}</Text>}
+
+        <View style={[styles.sectionRow, { marginTop: 22 }]}>
+          <View style={styles.sectionNo}><Text style={styles.sectionNoText}>2</Text></View>
+          <Text style={styles.sectionTitle}>Real-Time Search Filter with FlatList & Static Data</Text>
+        </View>
+
+        <TextInput
+          style={styles.input}
+          placeholder="Cari nama mahasiswa..."
+          placeholderTextColor="#94A3B8"
+          value={keyword}
+          onChangeText={setKeyword}
+        />
+        <Text style={styles.count}>
+          Menampilkan {hasil.length} dari {DAFTAR_MAHASISWA.length} mahasiswa
+        </Text>
+      </View>
+    </View>
+  );
+
   return (
     <View style={styles.container}>
-      <Text style={styles.heading}>Soal 1: Custom Reusable Component & Dynamic Props</Text>
-
-      <InfoCard
-        title="Tugas Mobile Game Development"
-        status="selesai"
-        onPress={() => setDetail('Detail dibuka: Tugas Mobile Game Development')}
-      />
-      <InfoCard
-        title="Proyek Pembuatan Aplikasi Mobile"
-        status="proses"
-        onPress={() => setDetail('Detail dibuka: Proyek Pembuatan Aplikasi Mobile')}
-      />
-      {detail !== '' && <Text style={styles.detail}>{detail}</Text>}
-
-
-      <Text style={[styles.heading, { marginTop: 30 }]}>Soal 2: Real-Time Search Filter with FlatList & Static Data</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Cari nama mahasiswa..."
-        value={keyword}
-        onChangeText={setKeyword}
-      />
       <FlatList
         data={hasil}
         keyExtractor={(item) => item.id}
+        ListHeaderComponent={bagianAtas}
         renderItem={({ item }) => (
           <View style={styles.item}>
-            <Text style={styles.nama}>{item.nama}</Text>
-            <Text style={styles.prodi}>{item.prodi}</Text>
+            <View style={styles.avatar}>
+              <Text style={styles.avatarText}>{item.nama.charAt(0)}</Text>
+            </View>
+            <View>
+              <Text style={styles.nama}>{item.nama}</Text>
+              <Text style={styles.prodi}>{item.prodi}</Text>
+            </View>
           </View>
         )}
         ListEmptyComponent={<Text style={styles.empty}>Data tidak ditemukan!</Text>}
+        keyboardShouldPersistTaps="handled"
+        contentContainerStyle={{ paddingBottom: 30 }}
       />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#F3F4F6', padding: 16, paddingTop: 48 },
-  heading: { fontSize: 18, fontWeight: '700', marginBottom: 10, marginTop: 4 },
+  container: { flex: 1, backgroundColor: '#F1F5F9' },
+  header: {
+    backgroundColor: '#0F172A',
+    paddingTop: 52,
+    paddingBottom: 24,
+    paddingHorizontal: 20,
+    borderBottomLeftRadius: 24,
+    borderBottomRightRadius: 24,
+  },
+  headerTitle: { color: '#FFFFFF', fontSize: 22, fontWeight: '800' },
+  headerSub: { color: '#94A3B8', fontSize: 13, marginTop: 4 },
+  body: { paddingHorizontal: 16, paddingTop: 20 },
+  sectionRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 12 },
+  sectionNo: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: '#2563EB',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 10,
+  },
+  sectionNoText: { color: '#FFFFFF', fontWeight: '800' },
+  sectionTitle: { flex: 1, fontSize: 15, fontWeight: '700', color: '#0F172A' },
   detail: {
     backgroundColor: '#DBEAFE',
     color: '#1E40AF',
-    padding: 10,
-    borderRadius: 8,
-    marginBottom: 8,
+    padding: 12,
+    borderRadius: 12,
     fontWeight: '600',
   },
   input: {
     backgroundColor: '#FFFFFF',
-    borderWidth: 1,
-    borderColor: '#D1D5DB',
-    borderRadius: 10,
-    padding: 10,
+    borderWidth: 2,
+    borderColor: '#CBD5E1',
+    borderRadius: 14,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
     fontSize: 16,
-    marginBottom: 10,
+    color: '#0F172A',
   },
-  item: { backgroundColor: '#FFFFFF', borderRadius: 12, padding: 14, marginBottom: 8 },
-  nama: { fontSize: 16, fontWeight: '600' },
-  prodi: { fontSize: 14, color: '#6B7280' },
-  empty: { textAlign: 'center', color: '#6B7280', marginTop: 20, fontSize: 16 },
+  count: { color: '#64748B', fontSize: 12, marginTop: 8, marginBottom: 10 },
+  item: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 14,
+    padding: 12,
+    marginHorizontal: 16,
+    marginBottom: 8,
+  },
+  avatar: {
+    width: 42,
+    height: 42,
+    borderRadius: 21,
+    backgroundColor: '#E0E7FF',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 12,
+  },
+  avatarText: { color: '#3730A3', fontWeight: '800', fontSize: 16 },
+  nama: { fontSize: 16, fontWeight: '700', color: '#0F172A' },
+  prodi: { fontSize: 13, color: '#64748B', marginTop: 2 },
+  empty: { textAlign: 'center', color: '#64748B', marginTop: 20, fontSize: 16 },
 });
